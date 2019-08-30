@@ -1,2 +1,3 @@
 # IMD-Gridded-Rainfall-Extractor
 This is a C++ code to extract rainfall data from IMD gridded rainfall data set (0.25°)
+This program extracts .grd files into a text file which can then be added to an excel sheet for analysis. The user can specify the year and the grid points of their choice. This program has been written in C++. Prior to running the program, certain procedures are to be performed to initialise the program directories and input data sets. In addition to the input grid files, two input files (lat.txt and lon.txt), containing information regarding data points are to be created. The detailed instructions are provided in the instructions.pdf
