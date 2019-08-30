@@ -1,0 +1,151 @@
+/*
+ * GUI_Project.cpp
+ *
+ *  Created on: 20-Nov-2016
+ *      Author: SINAN NIZAR
+ */
+#include<iostream>
+#include <fstream>
+#include <conio.h>
+#include<math.h>
+#include<windows.h>
+using namespace std;
+int main()
+ {
+ //char enter;
+ cout<<"GRD Extractor\n";
+ cout<<"Follow the steps and press the Enter key after each step\n";
+ cout<<"\nSTEP 1:\n";
+ cout<<"Create a new folder in your C drive and name it GRD \n";
+ cin.get();
+ cout<<"\nSTEP 2:\n";
+ cout<<"Copy all the grid files to be extracted to this folder \n";
+ cin.get();
+ cout<<"\nSTEP 3:\n";
+ cout<<"Make sure that the grid files are named as ind****_rfp25.grd, \nwhere **** is the corresponding year \n";
+ cout<<"\nExample ind2013_rfp25.grd \n";
+ cin.get();
+ cout<<"\nSTEP 4:\n";
+ cout<<"Create a text file named lat.txt in this directry\n";
+ cout<<"This text file should contain the desired latitudes for your location\n";
+ cout<<"\nFor reference see Instructions.pdf\n";
+ cout<<"\nSimilarly create lon.txt with the corresponding longitudes\n";
+ cin.get();
+
+ float start,end;
+ float lat[20000],lon[20000];
+int nu,x,y;
+x=1;
+y=1;
+ cout<<"Enter the start year \n";
+ cin>>start;
+ cout<<"Enter the end year\n";
+ cin>>end;
+ cout<<"Enter the number of points\n";
+ cin>>nu;
+ cout<<"Press Enter to continue\n";
+ cin.get();
+ cin.get();
+ //clrscr();
+ float rf[135][129],rainfall;
+     float lo[135], la[129] ;
+  int i, j, year, year1, month, date, nd;
+  FILE *fptr1,*fptr2;
+  int nd1[13] = {0,31,28,31,30,31,30,31,31,30,31,30,31} ;
+  int nd2[13] = {0,31,29,31,30,31,30,31,31,30,31,30,31} ;
+
+   char address[100] = {'\0'};
+   char address1[100] = {'\0'};
+   char address2[100] = {'\0'};
+   char address3[100] = {'\0'};
+   float p,temp;
+   sprintf(address2,"C:\\GRD\\lat.txt",year);
+   sprintf(address3,"C:\\GRD\\lon.txt",year);
+   ifstream openfile(address2);
+                          while(!openfile.eof())
+                          {
+                          openfile>>temp;
+                          lat[x]=temp;
+                          x++;
+                          }
+                          ifstream openfile1(address3);
+                                                    while(!openfile1.eof())
+                                                    {
+                                                    openfile1>>temp;
+                                                    lon[y]=temp;
+                                                    y++;
+                                                    }
+   for(year=start;year<=end;year++)
+   {
+   p = (((year-start)/(end+1-start))*100);
+   cout<<"\nTotal Progress ";
+   cout<<p;
+   cout<<"%\n";
+   cout<<"Extracting year ";
+   cout<<year<<"\n";
+   sprintf(address,"C:\\GRD\\ind%ld_rfp25.grd",year);
+   sprintf(address1,"C:\\GRD\\rfp_%ld.TXT",year);
+   for(j=0 ; j < 135 ; j++) lo[j] = 66.5 + j * 0.25 ;
+   for(j=0 ; j < 129 ; j++) la[j] =  6.5 + j * 0.25 ;
+   fptr1 = fopen(address,"rb");
+   fptr2 = fopen(address1,"w");
+
+   year1 = year / 4 ;
+       year1 = year1 * 4 ;
+
+       for(month=1 ; month < 13 ; month++)
+       {
+        if(month==2)
+                  cout<<"[=>         ] 10%\n";
+        if(month==4)
+                  cout<<"[==>        ] 20%\n";
+        if(month==5)
+                  cout<<"[===>       ] 30%\n";
+        if(month==6)
+                  cout<<"[====>      ] 40%\n";
+        if(month==7)
+                  cout<<"[=====>     ] 50%\n";
+        if(month==8)
+                  cout<<"[======>    ] 60%\n";
+        if(month==9)
+                  cout<<"[=======>   ] 70%\n";
+        if(month==11)
+                  cout<<"[========>  ] 80%\n";
+        if(month==12)
+                  cout<<"[=========> ] 90%\n";
+       nd = nd1[month] ;
+           if(year == year1)nd = nd2[month] ;
+           for(date=1 ; date <= nd ; date++)
+     {
+           //fprintf(fptr2,"%7.1f",date );
+           //fprintf(fptr2,"%7.1f",month );
+           //fprintf(fptr2,"%7.1f\t",year );
+           for(i=0 ; i < 129 ; i++)
+            {
+                   for(j=0 ; j < 135 ; j++)
+                  {   fread(&rainfall,sizeof(rainfall),1,fptr1);
+                      rf[j][i]  = rainfall ;
+                      for(x=1;x<=nu;x++)
+                      {
+                       if((lo[j]==lon[x])&&(la[i]==lat[x]))
+                       fprintf(fptr2,"%7.1f\t",rf[j][i]);
+                       }
+                       }
+         }
+           fprintf(fptr2,"\n");
+               }
+
+           }
+
+        }
+        fclose(fptr1);
+        fclose(fptr2);
+        cout<<"Job completed\n";
+        cout<<"\n           Coded by :\n";
+        cout<<"\n";
+        cout<<"             ---------------------\n";
+        cout<<"             |   SINAN NIZAR     |\n";
+        cout<<"             |  NITK Surathkal   |\n";
+        cout<<"             ---------------------";
+        getch();
+        }
